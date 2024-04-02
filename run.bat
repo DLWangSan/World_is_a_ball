@@ -1,0 +1,1 @@
+python main.py --train_id Ace_3d_model_001 --classifer train --data_path ./data/data/train.txt --val_path ./data/data/val.txt --mode_path models --input_size 256 --epochs 5000 --batch_size 8 --num_class 5 --workers 5  --lr 0.001  --model_name 3d_ace
