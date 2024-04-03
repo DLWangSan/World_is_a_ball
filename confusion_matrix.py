@@ -7,31 +7,15 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import numpy as np
+import proplot as pplt
 
 from Application import custom_collate_fn
 from dataLoaders.OXFordData import OXFordData
-
-
-# 假设 PetsNet 类定义已经给出
-class PetsNet(nn.Module):
-    def __init__(self, num_classes=37):
-        super(PetsNet, self).__init__()
-        self.num_classes = num_classes
-        self.backbone = models.resnet34(weights=ResNet34_Weights.DEFAULT)
-        in_features = self.backbone.fc.in_features
-        self.backbone.fc = nn.Identity()    # 移除原有的全连接
-        self.classifier_fc = nn.Linear(in_features, self.num_classes)
-        self.bound_fc = nn.Linear(in_features, 4)
-
-    def forward(self, x):
-        features = self.backbone(x)
-        class_logits = self.classifier_fc(features)
-        bbox = self.bound_fc(features)
-        return bbox, class_logits
+from models.PetsNet import PetsNet
 
 # 加载模型和权重
 model = PetsNet(37)
-model.load_state_dict(torch.load('/runs/2/best.pt'))
+model.load_state_dict(torch.load('/home/wsx/ptJobs/TB20201576A5/runs/2/best.pt'))
 model.eval()  # 将模型设置为评估模式
 
 # 假设 valid_loader 已经定义
@@ -61,6 +45,7 @@ with torch.no_grad():
 
 # 计算混淆矩阵
 cm = confusion_matrix(true_labels, pred_labels)
+
 
 # 绘制混淆矩阵
 plt.figure(figsize=(14, 10))
